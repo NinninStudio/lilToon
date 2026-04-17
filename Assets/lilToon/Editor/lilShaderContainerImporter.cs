@@ -1582,7 +1582,7 @@ namespace lilToon
 
         private static string GetSkipVariantsLightmaps()
         {
-            return "#pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED _MIXED_LIGHTING_SUBTRACTIVE";
+            return "#pragma skip_variants _MIXED_LIGHTING_SUBTRACTIVE";
         }
 
         private static string GetSkipVariantsDecals()
