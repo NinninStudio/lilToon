@@ -750,10 +750,10 @@ Shader "Hidden/ltspass_tess_cutout"
             #pragma fragmentoption ARB_precision_hint_fastest
             #define LIL_TESSELLATION
 
-            #pragma skip_variants DECALS_OFF DECALS_3RT DECALS_4RT DECAL_SURFACE_GRADIENT _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
-            #pragma skip_variants _ADDITIONAL_LIGHT_SHADOWS
-            #pragma skip_variants PROBE_VOLUMES_OFF PROBE_VOLUMES_L1 PROBE_VOLUMES_L2
-            #pragma skip_variants _SCREEN_SPACE_OCCLUSION
+            #pragma skip_variants DECALS_OFF DECALS_3RT DECALS_4RT DECAL_SURFACE_GRADIENT
+            // #pragma skip_variants (all removed - Unity6 multi_compile conflict)
+            #pragma skip_variants PROBE_VOLUMES_OFF
+            // #pragma skip_variants (all removed - Unity6 multi_compile conflict)
         ENDHLSL
 
 
