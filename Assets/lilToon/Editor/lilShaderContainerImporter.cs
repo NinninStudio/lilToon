@@ -706,7 +706,11 @@ namespace lilToon
                 var sb1 = new StringBuilder(ReadTextFile(subpath));
                 var sb2 = new StringBuilder(sb1.ToString());
 
-                sb1.Replace(LIL_DOTS_SM_TAGS, " \"ShaderModel\" = \"4.5\"");
+                // "RenderPipeline"="UniversalPipeline" を付けると URP のシェーダーキーワード事前フィルタ
+                // (UniversalRenderPipelineAsset の ApplyRulesIfTagsEqual) がこのシェーダーにも適用され、
+                // ビルド時に列挙される変種が URP 純正シェーダーと同じ基準で削られる（Player ビルド時間の短縮）。
+                // タグ無しだと Full variant space がそのままストリッパーに流れ込む。URP 下の SubShader 選択は変わらない。
+                sb1.Replace(LIL_DOTS_SM_TAGS, " \"ShaderModel\" = \"4.5\" \"RenderPipeline\" = \"UniversalPipeline\"");
                 //sb1.Replace(LIL_DOTS_SM_4_5, "#pragma target 4.5" + Environment.NewLine + "            #pragma exclude_renderers gles gles3 glcore");
                 //sb1.Replace(LIL_DOTS_SM_4_5_OR_3_5, "#pragma target 4.5" + Environment.NewLine + "            #pragma exclude_renderers gles gles3 glcore");
                 sb1.Replace(LIL_DOTS_SM_4_5, "#pragma target 4.5");
@@ -715,7 +719,7 @@ namespace lilToon
                 sb.AppendLine(sb1.ToString());
                 sb.AppendLine();
 
-                sb2.Replace(LIL_DOTS_SM_TAGS, "");
+                sb2.Replace(LIL_DOTS_SM_TAGS, " \"RenderPipeline\" = \"UniversalPipeline\"");
                 //sb2.Replace(LIL_DOTS_SM_4_5, "#pragma only_renderers gles gles3 glcore d3d11");
                 //sb2.Replace(LIL_DOTS_SM_4_5_OR_3_5, "#pragma target 3.5" + Environment.NewLine + "            #pragma only_renderers gles gles3 glcore d3d11");
                 sb2.Replace(LIL_DOTS_SM_4_5, "");
@@ -836,6 +840,12 @@ namespace lilToon
             #if LILTOON_LTCGI
             subShaderTags += " \"LTCGI\"=\"ALWAYS\"";
             #endif
+            if(rpname == "URP")
+            {
+                // UsePass ラッパーと自己完結シェーダー(Gem/Refraction 等)の SubShader にも URP タグを付け、
+                // URP のシェーダーキーワード事前フィルタの対象にする（LIL_DOTS_SM_TAGS 置換側と同じ理由）。
+                subShaderTags += " \"RenderPipeline\" = \"UniversalPipeline\"";
+            }
         }
 
         private static string ReadTextFile(string path)
